@@ -1,0 +1,33 @@
+{
+  "name": "@nish1896/react-nestjs-monorepo",
+  "author": "Nishant Kohli",
+  "version": "1.0.1",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "lib:build": "yarn workspace @core/lib lib:build",
+    "dev": "turbo run dev --parallel --no-cache",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "prettier": "prettier \"{apps,packages}/**/*.{json,html,css,sass,scss}\" --write --ignore-unknown"
+  },
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
+    "prettier": "^3.3.2",
+    "turbo": "^2.0.6"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ],
+    "*.{json,html,css,sass,scss}": [
+      "prettier --write --ignore-unknown"
+    ]
+  },
+  "packageManager": "yarn@1.22.19"
+}
