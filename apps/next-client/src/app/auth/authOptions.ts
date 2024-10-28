@@ -6,6 +6,8 @@ import { ROUTES, API_URLS } from '@/constants/urls';
 import { CredError } from '@/error/CredError';
 import { LoginRequestDto } from '@/dto/LoginRequestDto';
 import { LoginResponseDto } from '@/dto/LoginResponseDto';
+import { ERROR_MESSAGES } from '@/constants/errors';
+import { axiosInstance } from '@/services/axiosInstance';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -21,7 +23,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials || !credentials.email || !credentials.password) {
-          throw new CredError('Invalid credentials');
+          throw new CredError(ERROR_MESSAGES.INVALID_CREDENTIAL);
         }
         const loginData: LoginRequestDto = {
           email: credentials.email,
@@ -29,16 +31,16 @@ export const authOptions: NextAuthOptions = {
         };
 
         try {
-          const response = await axios.post(API_URLS.LOGIN, loginData);
+          const response = await axiosInstance.post('', loginData); 
           const user: LoginResponseDto = response.data;
 
           if (response.status === 200 && user) {
-            return { id: user.email, email: user.email, accessToken: user.accessToken };
+            return { id: user.email, email: user.email, accessToken: user.token };
           } else {
-            throw new CredError('Login failed'); 
+            throw new CredError(ERROR_MESSAGES.LOGIN_FAILED); 
           }
         } catch {
-          throw new CredError('Login failed'); 
+          throw new CredError(ERROR_MESSAGES.LOGIN_FAILED); 
         }
       },
     }),
