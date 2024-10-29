@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-require-imports, no-inline-comments */
+
 'use strict';
 const {
   Model
@@ -18,28 +20,35 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      field: 'id',
     },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
+      field: 'username',
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+      field: 'email',
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+      field: 'password',
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
+      field: 'createdAt',
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
+      field: 'updatedAt',
     },
   }, {
     sequelize,

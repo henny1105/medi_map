@@ -1,8 +1,10 @@
 import { useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { loginWithCredentials, loginWithGoogle } from '@/services/loginService';
 import { ERROR_MESSAGES } from '@/constants/errors';
 import { ROUTES } from '@/constants/urls';
+import { useSession } from 'next-auth/react';
+import { LoginError } from '@/error/AuthError';
 
 interface AuthActionsParams {
   email: string;
@@ -12,6 +14,14 @@ interface AuthActionsParams {
 
 export const useLoginActions = ({ email, password, setError }: AuthActionsParams) => {
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user?.accessToken) {
+      localStorage.setItem('accessToken', session.user.accessToken);
+      router.push(ROUTES.HOME);
+    }
+  }, [status, session, router]);
 
   const handleLogin = async () => {
     try {
@@ -21,13 +31,12 @@ export const useLoginActions = ({ email, password, setError }: AuthActionsParams
       }
 
       const result = await loginWithCredentials(email, password);
+
       if (result?.error) {
         setError(result.error);
-      } else {
-        router.push(ROUTES.HOME);
       }
     } catch (err: unknown) {
-      setError(ERROR_MESSAGES.LOGIN_FAILED);
+      setError(err instanceof LoginError ? err.message : ERROR_MESSAGES.LOGIN_FAILED);
     }
   };
 
@@ -35,7 +44,7 @@ export const useLoginActions = ({ email, password, setError }: AuthActionsParams
     try {
       await loginWithGoogle();
     } catch (err: unknown) {
-      setError(ERROR_MESSAGES.GOOGLE_LOGIN_ERROR);
+      setError(err instanceof LoginError ? err.message : ERROR_MESSAGES.GOOGLE_LOGIN_ERROR);
     }
   };
 
