@@ -1,0 +1,17 @@
+runtime: custom
+env: flex
+instance_class: F2
+
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 5
+
+env_variables:
+  NEXT_PUBLIC_LOCAL_BACKEND_URL: "https://backend-dot-f-lab-project-440413.uc.r.appspot.com"
+  GOOGLE_CLIENT_ID: "560997285561-laq7qtne5qfo3uqvm7opijbvdpf05fdb.apps.googleusercontent.com"
+  GOOGLE_CLIENT_SECRET: "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"
+  NEXTAUTH_SECRET: "8b885ddb0a5da1f04784be72e27589c9fbfee22d20f4ef27f063d8ed7d8211bd"
+  NEXTAUTH_URL: "https://f-lab-project-440413.uc.r.appspot.com"
+
+readiness_check:
+  app_start_timeout_sec: 600
