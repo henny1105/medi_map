@@ -1,6 +1,7 @@
 declare global {
   interface Window {
     kakao: typeof kakao;
+    markers: kakao.maps.Marker[];
   }
 }
 
@@ -20,12 +21,14 @@ declare namespace kakao.maps {
     constructor(container: HTMLElement | null, options: MapOptions);
     setCenter(latlng: LatLng): void;
     setLevel(level: number): void;
+    getCenter(): LatLng;
   }
 
   interface MarkerOptions {
     map: Map;
     position: LatLng;
     title?: string;
+    image?: MarkerImage;
   }
 
   class Marker {
@@ -44,12 +47,34 @@ declare namespace kakao.maps {
     close(): void;
   }
 
+  class Size {
+    constructor(width: number, height: number);
+  }
+
+  class Point {
+    constructor(x: number, y: number);
+  }
+
+  interface MarkerImageOptions {
+    offset: Point;
+  }
+
+  class MarkerImage {
+    constructor(src: string, size: Size, options?: MarkerImageOptions);
+  }
+
   namespace event {
     function addListener(
       target: Map | Marker | InfoWindow,
       type: string,
       callback: () => void
     ): void;
+  }
+
+  namespace services {
+    namespace Util {
+      function getDistance(latlng1: LatLng, latlng2: LatLng): number;
+    }
   }
 
   function load(callback: () => void): void;
