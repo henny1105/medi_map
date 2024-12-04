@@ -1,22 +1,25 @@
 import React from 'react';
 import DOMPurify from 'isomorphic-dompurify';
-import { DocData, Paragraph } from '@/dto/MedicineResultDto';
+import { XMLParser } from 'fast-xml-parser';
+import { MedicineInfoProps, Paragraph, Article, Doc } from '@/dto/MedicineResultDto';
+import { SEARCH_ERROR_MESSAGES } from '@/constants/search_errors';
 
-interface MedicineInfoProps {
-  docData?: DocData;
-  sectionTitle: string;
-}
-
+// Paragraph 태그 내용 렌더링
 const ParagraphContent: React.FC<{ paragraph?: Paragraph }> = ({ paragraph }) => {
-  const content = paragraph?.cdata || paragraph?.text || '';
+  if (!paragraph) return null;
+
+  const content = paragraph.cdata || paragraph["#text"] || paragraph.text || '';
   const sanitizedHTML = DOMPurify.sanitize(content);
 
-  if (paragraph?.tagName === 'table') {
+  // 테이블 태그일 경우, 테이블 컴포넌트로 렌더링
+  if (paragraph["@_tagName"] === 'table' && paragraph["#text"]) {
     return (
-      <table
-        className="medi_table"
-        dangerouslySetInnerHTML={{ __html: `<tbody>${sanitizedHTML}</tbody>` }}
-      />
+      <div className="table_container">
+        <table
+          className="medi_table"
+          dangerouslySetInnerHTML={{ __html: paragraph["#text"] }}
+        />
+      </div>
     );
   }
 
@@ -24,23 +27,61 @@ const ParagraphContent: React.FC<{ paragraph?: Paragraph }> = ({ paragraph }) =>
 };
 
 const MedicineInfo: React.FC<MedicineInfoProps> = ({ docData, sectionTitle }) => {
-  if (!docData?.DOC) return null;
 
-  const { title, SECTION } = docData.DOC;
+  if (!docData) {
+    return null;
+  }
+
+  // XML 데이터 -> JSON으로 변환 함수
+  const parseXMLToJSON = (xml: string): { DOC?: Doc } => {
+    const parser = new XMLParser({
+      ignoreAttributes: false,
+      attributeNamePrefix: '@_',
+    });
+    return parser.parse(xml);
+  };
+
+  let parsedData;
+  try {
+    if (typeof docData === 'string') {
+      parsedData = parseXMLToJSON(docData);
+    } else if (typeof docData === 'object' && docData !== null) {
+      parsedData = docData;
+    } else {
+      throw new Error(SEARCH_ERROR_MESSAGES.INVALID_DOC_DATA_FORMAT);
+    }
+  } catch (error) {
+    console.error(SEARCH_ERROR_MESSAGES.XML_PARSING_ERROR, error);
+    return <p>XML 데이터를 처리할 수 없습니다.</p>;
+  }
+  
+
+  const { DOC } = parsedData || {};
+  const { "@_title": title, SECTION } = DOC || {};
+
+  const articles = Array.isArray(SECTION?.ARTICLE)
+    ? SECTION.ARTICLE
+    : SECTION?.ARTICLE
+    ? [SECTION.ARTICLE]
+    : [];
 
   return (
     <div className="medi_desc_bottom">
       <h3 className="sub_title">{title || sectionTitle}</h3>
       <ul className="medi_info_list">
-        {(SECTION?.ARTICLE ? (SECTION.ARTICLE instanceof Array ? SECTION.ARTICLE : [SECTION.ARTICLE]) : []).map((article, index) => (
-          article && (
-            <li key={index} className="medi_box">
-              <h4 className="medi_sub_title">{article.title || ''}</h4>
-              {(article.PARAGRAPH instanceof Array ? article.PARAGRAPH : [article.PARAGRAPH]).map((paragraph, pIndex) => (
-                <ParagraphContent key={pIndex} paragraph={paragraph} />
-              ))}
-            </li>
-          )
+        {articles.map((article: Article, index: number) => (
+          <li key={index}>
+            {article["@_title"] && (
+              <h4 className="medi_sub_title">{article["@_title"]}</h4>
+            )}
+            {Array.isArray(article.PARAGRAPH)
+              ? article.PARAGRAPH.map((paragraph: Paragraph, pIndex: number) => (
+                  <ParagraphContent key={pIndex} paragraph={paragraph} />
+                ))
+              : article.PARAGRAPH && (
+                  <ParagraphContent paragraph={article.PARAGRAPH} />
+                )}
+          </li>
         ))}
       </ul>
     </div>
