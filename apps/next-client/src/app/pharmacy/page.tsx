@@ -1,157 +1,111 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import '@/styles/pages/pharmacy/pharmacy.scss';
-import { PharmacyDataError, LocationError } from '@/error/PharmaciesError';
+import useGeoLocation from '@/hooks/useGeoLocation';
+import { usePharmacy } from '@/hooks/usePharmacy';
+import PharmacyTimeList from '@/components/pharmacy/PharmacyTimeList';
+import KakaoMap from '@/components/pharmacy/KakaoMap';
+import PharmacyDetails from '@/components/pharmacy/PharmacyDetails';
+import { PharmacyDTO } from '@/dto/PharmacyDTO';
 import { ERROR_MESSAGES } from '@/constants/errors';
-
-interface Pharmacy {
-  dutyName: string;
-  dutyAddr: string;
-  dutyTel1: string;
-  dutyTime1s?: string;
-  dutyTime1c?: string;
-  dutyTime2s?: string;
-  dutyTime2c?: string;
-  dutyTime3s?: string;
-  dutyTime3c?: string;
-  dutyTime4s?: string;
-  dutyTime4c?: string;
-  dutyTime5s?: string;
-  dutyTime5c?: string;
-  dutyTime6s?: string;
-  dutyTime6c?: string;
-  dutyTime7s?: string;
-  dutyTime7c?: string;
-  wgs84Lat: number;
-  wgs84Lon: number;
-  [key: string]: string | number | undefined;
-}
-
-const days = [
-  { name: '월요일', start: 'dutyTime1s', close: 'dutyTime1c' },
-  { name: '화요일', start: 'dutyTime2s', close: 'dutyTime2c' },
-  { name: '수요일', start: 'dutyTime3s', close: 'dutyTime3c' },
-  { name: '목요일', start: 'dutyTime4s', close: 'dutyTime4c' },
-  { name: '금요일', start: 'dutyTime5s', close: 'dutyTime5c' },
-  { name: '토요일', start: 'dutyTime6s', close: 'dutyTime6c' },
-  { name: '일요일', start: 'dutyTime7s', close: 'dutyTime7c' },
-];
-
-function formatTime(time: string | number): string {
-  const timeStr = time.toString().padStart(4, '0');
-  return `${timeStr.slice(0, 2)}:${timeStr.slice(2)}`;
-}
-
-async function fetchPharmacies(lat: number, lng: number): Promise<Pharmacy[]> {
-  const response = await fetch(`/api/pharmacies?lat=${lat}&lng=${lng}`);
-  if (!response.ok) throw new PharmacyDataError();
-  const data = await response.json();
-  if (!Array.isArray(data?.item)) throw new PharmacyDataError(ERROR_MESSAGES.PHARMACY_DATA_ERROR);
-  return data.item;
-}
-
-function loadKakaoMapScript(callback: () => void) {
-  if (document.querySelector(`script[src*="sdk.js"]`)) {
-    callback();
-    return;
-  }
-  
-  const script = document.createElement('script');
-  script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=services,clusterer`;
-  script.async = true;
-  script.onload = callback;
-  script.onerror = () => console.error(ERROR_MESSAGES.KAKAO_MAP_ERROR);
-  document.head.appendChild(script);
-}
-
-function initializeMap(containerId: string, pharmacies: Pharmacy[], location: { lat: number; lng: number }) {
-  window.kakao.maps.load(() => {
-    const container = document.getElementById(containerId);
-    const options = { center: new window.kakao.maps.LatLng(location.lat, location.lng), level: 5 };
-    const map = new window.kakao.maps.Map(container, options);
-
-    pharmacies.forEach((pharmacy) => {
-      const markerPosition = new window.kakao.maps.LatLng(pharmacy.wgs84Lat, pharmacy.wgs84Lon);
-      const marker = new window.kakao.maps.Marker({ map, position: markerPosition, title: pharmacy.dutyName });
-
-      const infowindow = new window.kakao.maps.InfoWindow({
-        content: `<div class='info_name'>${pharmacy.dutyName}</div>`,
-      });
-
-      window.kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker));
-      window.kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close());
-    });
-  });
-}
+import { API_URLS } from '@/constants/urls';
 
 export default function PharmacyPage() {
-  const [pharmacies, setPharmacies] = useState<Pharmacy[]>([]);
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { location, locationError } = useGeoLocation();
+  const { pharmacies, setPharmacies, loading, error: pharmacyError, setLoading, setError } = usePharmacy();
+  const [selectedPharmacy, setSelectedPharmacy] = useState<PharmacyDTO | null>(null);
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => setLocation({ lat: position.coords.latitude, lng: position.coords.longitude }),
-        () => setError(new LocationError().message)
-      );
+  // 약국 검색 함수 (백엔드 API 호출)
+  const handleSearch = useCallback(async (lat: number, lng: number) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URLS.PHARMACY}?lat=${lat}&lng=${lng}`);
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        setPharmacies(data);
+      } else {
+        console.error('Invalid data format:', data);
+        setPharmacies([]);
+      }
+    } catch {
+      setError(ERROR_MESSAGES.PHARMACY_DATA_ERROR);
     }
-  }, []);
+    setLoading(false);
+  }, [setLoading, setPharmacies, setError]);
 
+  // 약국 클릭 핸들러
+  const handlePharmacyClick = (pharmacy: PharmacyDTO) => {
+    setSelectedPharmacy(pharmacy);
+  };
+
+  // 위치 정보가 변경될 때 검색 실행
   useEffect(() => {
     if (location) {
-      fetchPharmacies(location.lat, location.lng)
-        .then((data) => {
-          setPharmacies(data);
-          setError(null);
-        })
-        .catch((error) => setError(error instanceof PharmacyDataError ? error.message : ERROR_MESSAGES.PHARMACY_DATA_ERROR));
+      handleSearch(location.lat, location.lng);
     }
-  }, [location]);
+  }, [location, handleSearch]);
 
-  useEffect(() => {
-    loadKakaoMapScript(() => {
-      if (pharmacies.length > 0 && location) {
-        initializeMap('map', pharmacies, location);
-      }
-    });
-  }, [pharmacies, location]);
+  // UI 렌더링 로직
+  const renderContent = () => {
+    if (locationError) {
+      return <p className="error_message">{locationError.message}</p>;
+    }
+
+    if (pharmacyError) {
+      return <p className="error_message">{pharmacyError}</p>;
+    }
+
+    if (loading) {
+      return (
+        <div className="loading_spinner d-flex justify-content-center align-items-center">
+          <div className="spinner-grow text-info" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      );
+    }
+
+    if (!Array.isArray(pharmacies) || pharmacies.length === 0) {
+      return <p>주변에 약국이 없습니다.</p>;
+    }
+
+    return (
+      <div className="pharmacies_box">
+        <div className='pharmacies_desc'>
+          <p className="pharmacies_count">총 <span>{pharmacies.length}</span>
+            개의 약국이 검색되었습니다🍀</p>
+          <ul className="pharmacies_list">
+            {pharmacies.map((pharmacy) => (
+              <li key={pharmacy.hpid} onClick={() => handlePharmacyClick(pharmacy)}>
+                <h2>{pharmacy.dutyName.trim()}</h2>
+                <p className="address">{pharmacy.dutyAddr}</p>
+                <PharmacyTimeList pharmacy={pharmacy} />
+                <p className="phone_number">{pharmacy.dutyTel1}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {selectedPharmacy && (
+          <PharmacyDetails
+            pharmacy={selectedPharmacy}
+            onClose={() => setSelectedPharmacy(null)}
+          />
+        )}
+      </div>
+    );
+  };
 
   return (
-    <div>
-      <h2 className="title">약국 찾기</h2>
-      <div id="map" style={{ width: '100%', height: '400px', marginBottom: '20px' }}></div>
-      
-      {error ? (
-        <p className="error_message">{error}</p>
-      ) : pharmacies.length > 0 ? (
-        <ul>
-          {pharmacies.map((pharmacy, index) => (
-            <li key={index}>
-              <h2>{pharmacy.dutyName.trim()}</h2>
-              <p>주소: {pharmacy.dutyAddr}</p>
-              <p>전화번호: {pharmacy.dutyTel1}</p>
-              <div>
-                <strong>영업 시간:</strong>
-                <ul>
-                  {days.map((day) => {
-                    const openTime = pharmacy[day.start];
-                    const closeTime = pharmacy[day.close];
-                    return openTime && closeTime ? (
-                      <li key={day.name}>
-                        {day.name}: {formatTime(openTime)} - {formatTime(closeTime)}
-                      </li>
-                    ) : null;
-                  })}
-                </ul>
-              </div>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>로딩중...</p>
-      )}
+    <div className="pharmacy_cont">
+      <KakaoMap
+        pharmacies={pharmacies}
+        location={location}
+        onSearch={handleSearch}
+        onPharmacyClick={handlePharmacyClick}
+      />
+      {renderContent()}
     </div>
   );
 }
