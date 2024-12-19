@@ -1,8 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import authRoutes from '@/routes/auth';
+import authRoutes from '@/routes/auth/index';
 import pharmacyRoutes from '@/routes/pharmacy/index';
 import medicineRoutes from '@/routes/medicine/index';
+import mypageRoutes from '@/routes/mypage/index';
 import postRoutes from '@/routes/post/index';
 import { PORT } from '@/app-constants/constants';
 import { checkEnvVariables } from '@/config/env';
@@ -33,6 +34,7 @@ app.use(express.json());
 app.use(ROUTES.API.AUTH, authRoutes);
 app.use(ROUTES.API.PHARMACY, pharmacyRoutes);
 app.use(ROUTES.API.MEDICINE, medicineRoutes);
+app.use(ROUTES.API.MYPAGE, mypageRoutes);
 app.use(ROUTES.API.POST, postRoutes);
 
 // 루트 라우트 추가
