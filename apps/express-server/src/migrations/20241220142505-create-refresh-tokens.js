@@ -3,45 +3,44 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Comments', {
+    await queryInterface.createTable('RefreshTokens', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      articleId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'Posts', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
       userId: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'Users', key: 'id' },
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      content: {
+      token: {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      createdAt: {
-        allowNull: false,
+      expiresAt: {
         type: Sequelize.DATE,
+        allowNull: false,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
         defaultValue: Sequelize.fn('NOW'),
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        allowNull: false,
         defaultValue: Sequelize.fn('NOW'),
       },
     });
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable('Comments');
+    await queryInterface.dropTable('RefreshTokens');
   },
 };
