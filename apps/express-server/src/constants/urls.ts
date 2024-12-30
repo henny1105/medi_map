@@ -6,6 +6,8 @@ export const ROUTES = {
     MYPAGE: '/api/users',
     POST: '/api/posts',
     HEALTH: '/api/health',
+    UPLOADS: '/api/uploads',
+    UPLOADS_IMAGES: '/api/uploads/images'
   },
   HOME: '/',
 };
