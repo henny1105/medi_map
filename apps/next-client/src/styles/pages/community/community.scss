@@ -1,6 +1,6 @@
 [class^='community_'] {
   .inner {
-    padding: 20rem 0;
+    padding: 18rem 0;
     max-width: 128rem;
   }
 }
@@ -15,8 +15,8 @@
     text-align: center;
   }
   .sub_title {
-    font-size: 2rem;
-    margin: 2rem 0 10rem;
+    font-size: 1.8rem;
+    margin: 1rem 0 10rem;
     text-align: center;
   }
   .search_box {
@@ -92,12 +92,16 @@
           color: #555;
         }
         &.date {
-          width: 14%;
+          width: 10%;
           color: #555;
+          padding: 2.3rem 1rem;
+          text-align: center;
         }
         &.author {
           width: 10%;
           color: #555;
+          padding: 2.3rem 1rem;
+          text-align: center;
         }
         &.title {
           cursor: pointer;
@@ -112,6 +116,21 @@
           font-size: 1.7rem;
           font-weight: 700;
         }
+      }
+    }
+  }
+
+  .form_group {
+    margin-bottom: 2rem;
+    input {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+    .quill {
+      .ql-container {
+        height: 50rem;
       }
     }
   }
@@ -137,14 +156,9 @@
     justify-content: flex-end;
     margin-top: 2rem;
     gap: 1rem;
+    align-items: center;
     span {
       color: #333;
-    }
-    a {
-      background: var(--sky-blue);
-      border-radius: 1rem;
-      padding: 0.2rem 2rem;
-      color: #fff;
     }
     .recommend_button {
       position: relative;
@@ -165,7 +179,6 @@
         border-radius: 1rem;
         padding: 1rem;
         margin-top: 2rem;
-        font-size: 1.5rem;
         resize: none;
       }
       button {
@@ -173,7 +186,6 @@
         color: #fff;
         padding: 1rem 2rem;
         border-radius: 1rem;
-        font-size: 1.5rem;
         margin-top: 1rem;
         width: 100%;
       }
@@ -254,6 +266,7 @@
         position: absolute;
         top: 1.4rem;
         right: 0;
+        gap: 1rem;
       }
     }
   }
@@ -266,7 +279,6 @@
 .edit_button,
 .cancel_button {
   border: 1px solid var(--btn-color);
-  margin-right: 1rem;
   color: var(--btn-color);
 }
 .delete_button,
@@ -292,7 +304,20 @@
 
     &.arrow {
       border: 1px solid #ddd;
-      margin: 0 1rem;
+      margin: 0 3rem;
+      cursor: pointer;
+
+      &.left {
+        img {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    &.blind {
+      img {
+        opacity: 0.1;
+      }
     }
 
     &.active {
@@ -302,4 +327,35 @@
       position: relative;
     }
   }
+}
+
+.actions {
+  display: flex;
+  gap: 2rem;
+  button {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    font-size: 1.8rem;
+    text-align: center;
+    width: 15rem;
+  }
+  .create_button {
+    background: var(--btn-color);
+    color: #fff;
+  }
+  .delete_button {
+    color: var(--btn-color);
+    background: #fff;
+    border: 1px solid var(--btn-color);
+  }
+}
+
+.list_button {
+  background: var(--sky-blue);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  color: #fff;
+  font-size: 1.8rem;
+  text-align: center;
+  width: 15rem;
 }
