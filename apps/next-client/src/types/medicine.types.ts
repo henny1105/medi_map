@@ -20,3 +20,12 @@ export interface MedicineData {
   udDocData: string | null;
   nbDocData: string | null;
 }
+
+export interface MedicineFavorite {
+  medicineId: string;
+  itemName: string;
+  entpName: string;
+  etcOtcName: string;
+  className: string;
+  itemImage: string;
+}
