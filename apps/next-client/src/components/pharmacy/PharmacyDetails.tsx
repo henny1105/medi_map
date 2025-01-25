@@ -1,4 +1,3 @@
-import React from 'react';
 import { PharmacyDTO } from '@/dto/PharmacyDTO';
 import { getTodayOperatingHours, getWeeklyOperatingHours, isPharmacyOpenNowToday } from '@/utils/pharmacyUtils';
 import Image from 'next/image';

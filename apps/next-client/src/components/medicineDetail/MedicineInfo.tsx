@@ -1,4 +1,3 @@
-import React from 'react';
 import DOMPurify from 'isomorphic-dompurify';
 import { XMLParser } from 'fast-xml-parser';
 import { MedicineInfoProps, Paragraph, Article, Doc } from '@/dto/MedicineResultDto';
