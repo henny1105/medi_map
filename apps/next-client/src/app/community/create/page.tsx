@@ -1,16 +1,15 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback, useMemo } from "react";
-import dynamic from "next/dynamic";
-import type Quill from "quill"; 
-
-import axios from "axios";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
-import { API_URLS } from "@/constants/urls";
-import "react-quill/dist/quill.snow.css";
-import "@/styles/pages/community/community.scss";
-import { ALERT_MESSAGES } from "@/constants/alert_message";
+import React, { useState, useCallback, useMemo } from 'react';
+import dynamic from 'next/dynamic';
+import type Quill from 'quill'; 
+import { axiosInstance } from '@/services/axiosInstance';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { API_URLS } from '@/constants/urls';
+import 'react-quill/dist/quill.snow.css';
+import '@/styles/pages/community/community.scss';
+import { ALERT_MESSAGES } from '@/constants/alert_message';
 
 // ReactQuill 동적 로드 (SSR 비활성화)
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -35,7 +34,7 @@ export default function CreatePost() {
           formData.append("image", file);
 
           // 업로드 요청
-          const response = await axios.post(API_URLS.UPLOADS, formData, {
+          const response = await axiosInstance.post(API_URLS.UPLOADS, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${Cookies.get("accessToken")}`,
@@ -107,7 +106,7 @@ export default function CreatePost() {
       return;
     }
     try {
-      await axios.post(API_URLS.POSTS, newPost, {
+      await axiosInstance.post(API_URLS.POSTS, newPost, {
         headers: {
           Authorization: `Bearer ${Cookies.get("accessToken")}`,
         },
