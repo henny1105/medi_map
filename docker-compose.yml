@@ -27,11 +27,3 @@ services:
       DB_USER: postgres           # PostgreSQL 사용자
       DB_PASSWORD: postgres       # PostgreSQL 비밀번호
       DB_NAME: postgres           # 사용할 데이터베이스 이름
-
-  next-client:
-    image: henny1105/next-client
-    build:
-      context: .
-      dockerfile: ./apps/next-client/Dockerfile
-    ports:
-      - '3000:3000'
