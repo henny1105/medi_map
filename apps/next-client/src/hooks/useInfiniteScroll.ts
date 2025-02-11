@@ -6,7 +6,11 @@ interface UseInfiniteScrollProps {
   onLoadMore: () => void;
 }
 
-export default function useInfiniteScroll({ loading, hasMore, onLoadMore }: UseInfiniteScrollProps) {
+export default function useInfiniteScroll({
+  loading,
+  hasMore,
+  onLoadMore,
+}: UseInfiniteScrollProps) {
   const observer = useRef<IntersectionObserver | null>(null);
 
   const lastElementRef = useCallback(

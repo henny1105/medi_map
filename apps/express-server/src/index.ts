@@ -1,17 +1,17 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import authRoutes from '@/routes/auth';
-import pharmacyRoutes from '@/routes/parmacy/index';
-import medicineRoutes from '@/routes/medicine/index';
+import { createServer } from 'http';
+import os from 'os';
 import { PORT } from '@/app-constants/constants';
 import { checkEnvVariables } from '@/config/env';
-import { ROUTES } from '@/constants/urls';
+import { winstonLogger } from '@/middleware/winston-logger';
+import routes from '@/routes';
+import path from 'path';
 
 checkEnvVariables();
 
 const app = express();
 
-// CORS 설정
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -19,22 +19,24 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// 정적 파일 제공 설정 추가
+const uploadsPath = path.join(__dirname, './uploads/images'); // 상대 경로 수정
+app.use('/uploads', express.static(uploadsPath));
+console.log(`Static files served from: ${uploadsPath}`);
+
 // 로깅 미들웨어
 app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log('Request Origin:', req.headers.origin);
+  winstonLogger.info(`[Request Log] Method: ${req.method}, URL: ${req.url}`);
   next();
 });
 
-// 미들웨어 설정
 app.use(express.json());
 
 // 라우트 설정
-app.use(ROUTES.API.AUTH, authRoutes);
-app.use(ROUTES.API.PHARMACY, pharmacyRoutes);
-app.use(ROUTES.API.MEDICINE, medicineRoutes);
+app.use(routes);
 
 // 루트 라우트 추가
-app.get(ROUTES.HOME, (req: Request, res: Response) => {
+app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to the Express Server!');
 });
 
@@ -45,13 +47,22 @@ app.use((req: Request, res: Response) => {
 
 // 예외 처리 미들웨어
 app.use((err: Error, req: Request, res: Response) => {
-  console.error('Error:', err.stack);
+  winstonLogger.error(`[Error] ${err.stack}`);
   res.status(500).json({ message: 'Internal Server Error', error: err.message });
 });
 
-// 서버 실행
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+function bootstrap() {
+  const hostName = os.hostname();
+  const port = PORT || 5000;
+
+  const server = createServer(app);
+
+  server.listen(port, () => {
+    winstonLogger.info(`[ ⚡️ ${hostName} ⚡️ ] - Server running on port ${port}`);
+    console.log(`Server running on port ${port}`);
+  });
+}
+
+bootstrap();
 
 export default app;
