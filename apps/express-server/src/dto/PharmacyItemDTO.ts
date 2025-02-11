@@ -1,8 +1,7 @@
-import { PharmacyItem } from '@/models';
 import { PharmacyAPIItem } from '@/types/pharmacy.types';
 
 export class PharmacyItemDTO {
-  static fromAPI(item: PharmacyAPIItem): PharmacyItem {
+  static fromAPI(item: PharmacyAPIItem): any {
     return {
       id: 0,
       dutyName: item.dutyName,
