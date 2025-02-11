@@ -1,4 +1,3 @@
-import React from 'react';
 import { PharmacyDTO } from '@/dto/PharmacyDTO';
 import { getTodayOperatingHours, isPharmacyOpenNowToday } from '@/utils/pharmacyUtils';
 
