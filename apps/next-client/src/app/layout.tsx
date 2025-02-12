@@ -6,11 +6,8 @@ import Header from '@/components/Header';
 import SessionWrapper from '@/components/SessionWrapper';
 import ContentWrapper from '@/components/ContentWrapper';
 import { ReactNode } from 'react';
-import { checkEnvVariables } from '@/config/env';
 import SessionCookieSetter from '@/components/SessionCookieSetter';
 import Script from 'next/script';
-
-checkEnvVariables();
 
 interface LayoutProps {
   children: ReactNode;
