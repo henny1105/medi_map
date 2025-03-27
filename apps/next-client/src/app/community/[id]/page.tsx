@@ -1,33 +1,26 @@
-import { API_URLS } from '@/constants/urls';
-import PostContent from '@/components/community/PostContent';
-import PostDetailPage from '@/components/community/PostDetailPage';
 import '@/styles/pages/community/community.scss';
-import { ERROR_MESSAGES } from '@/constants/errors';
+import { fetchPost } from '@/utils/PostApi';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
+import PostDetailClient from '@/components/community/PostDetailClient';
 
-async function fetchPost(id: string) {
-  const response = await fetch(`${API_URLS.POSTS}/${id}`, { cache: 'no-store' });
-  
-  if (!response.ok) {
-    let errorMessage = `게시글을 불러올 수 없습니다. 상태 코드: ${response.status}`;
-
-    if (response.status === 404) {
-      errorMessage = ERROR_MESSAGES.POST_NOT_FOUND;
-    } else if (response.status === 500) {
-      errorMessage = ERROR_MESSAGES.SERVER_ERROR;
-    }
-    console.error(errorMessage);
-    throw new Error(errorMessage);
-  }
-  return response.json();
+interface PageProps {
+  params: { id: string };
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const post = await fetchPost(params.id);
+async function getPostDetails(id: string) {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['post', id],
+    queryFn: () => fetchPost(id),
+  });
+  return dehydrate(queryClient);
+}
+
+export default async function Page({ params }: PageProps) {
+  const { id } = params;
+  const dehydratedState = await getPostDetails(id);
 
   return (
-    <div className="post_detail">
-      <PostContent post={post} />
-      <PostDetailPage urlPostId={params.id} userId={post.userId} />
-    </div>
+    <PostDetailClient urlPostId={id} dehydratedState={dehydratedState} />
   );
 }
