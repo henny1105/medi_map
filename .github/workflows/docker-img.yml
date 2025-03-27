@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./apps/express-server/Dockerfile
+          file: ./Dockerfile
           push: true
           tags: |
             asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/medi-map/express-server:${{ github.sha }}
