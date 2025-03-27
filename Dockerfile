@@ -2,17 +2,24 @@ FROM node:20-alpine3.18
 
 WORKDIR /app
 
-# 1) 루트에 있는 주요 설정/패키지 파일들 복사
+# 의존성 및 빌드에 필요한 파일들만 우선 복사
 COPY turbo.json .
 COPY tsconfig.json .
 COPY package.json .
-
-# 2) express-server 폴더 통째로 복사
+COPY yarn.lock .
 COPY apps/express-server ./apps/express-server
 
-# 3) 의존성 설치 & 빌드
-RUN yarn
+# 패키지 매니저 캐시 활용
+RUN yarn install --frozen-lockfile --cache-folder ./yarncache
+
+# 전체 프로젝트 빌드
 RUN yarn build
 
-# 4) 실행
+# 불필요한 캐시 제거
+RUN rm -rf ./yarncache
+
+# Cloud Run 포트 노출
+EXPOSE 8080
+
+# 서버 실행
 CMD ["yarn", "workspace", "express-server", "start"]

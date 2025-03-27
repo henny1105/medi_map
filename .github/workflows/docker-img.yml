@@ -10,38 +10,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 코드 체크아웃
+      # 1. GitHub 저장소 코드 가져오기
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Docker Buildx 설정
+      # 2. Docker Buildx 최신 버전 세팅 (v3)
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
 
-      # 3. GCP에 로그인
+      # 3. GCP 서비스 계정으로 인증
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
-      # 4. Google Cloud SDK 구성
+      # 4. GCP 프로젝트 설정 및 도커 레지스트리 인증
       - name: Configure Google Cloud SDK
         run: |
           gcloud --quiet config set project ${{ secrets.GCP_PROJECT_ID }}
           gcloud --quiet auth configure-docker asia-northeast3-docker.pkg.dev
 
-      # 5. express-server 이미지 빌드 및 푸시
+      # 5. express-server Docker 이미지 빌드 및 푸시 (캐시 최적화 적용)
       - name: Build and Push express-server Image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
+          file: ./apps/express-server/Dockerfile
           push: true
           tags: |
             asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/medi-map/express-server:${{ github.sha }}
             asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/medi-map/express-server:latest
-          cache-from: type=gha,scope=express-server
-          cache-to: type=gha,mode=max,scope=express-server
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             DB_USER=${{ secrets.DB_USER }}
@@ -51,3 +51,18 @@ jobs:
             DB_PORT=${{ secrets.DB_PORT }}
             FRONTEND_URL=${{ secrets.FRONTEND_URL }}
             DATA_API_KEY=${{ secrets.DATA_API_KEY }}
+
+      # 6. Cloud Run에 배포 (환경변수 포함, 최종)
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy express-server \
+            --image asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/medi-map/express-server:latest \
+            --platform managed \
+            --region asia-northeast3 \
+            --allow-unauthenticated \
+            --cpu 2 \
+            --memory 1Gi \
+            --min-instances 1 \
+            --max-instances 3 \
+            --set-env-vars JWT_SECRET=${{ secrets.JWT_SECRET }},DB_USER=${{ secrets.DB_USER }},DB_HOST=${{ secrets.DB_HOST }},DB_NAME=${{ secrets.DB_NAME }},DB_PASSWORD=${{ secrets.DB_PASSWORD }},DB_PORT=${{ secrets.DB_PORT }},FRONTEND_URL=${{ secrets.FRONTEND_URL }},DATA_API_KEY=${{ secrets.DATA_API_KEY }} \
+            --quiet
