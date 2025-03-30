@@ -4,7 +4,7 @@ import DOMPurify from 'dompurify';
 import { Op, WhereOptions } from 'sequelize';
 import { Post, Comment, Recommendation, User } from '@/models';
 import { authMiddleware, AuthenticatedRequest } from '@/middleware/authMiddleware';
-import { MESSAGES_POST } from '@/constants/post_messages';
+import { MESSAGES_POST } from '@/constants/postMessages';
 
 const router = express.Router();
 

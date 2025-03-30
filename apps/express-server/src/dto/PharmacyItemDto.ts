@@ -1,6 +1,6 @@
 import { PharmacyAPIItem } from '@/types/pharmacy.types';
 
-export class PharmacyItemDTO {
+export class PharmacyItemDto {
   static fromAPI(item: PharmacyAPIItem): any {
     return {
       id: 0,

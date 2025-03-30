@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { User, sequelize } from '@/models';
 import { findRefreshToken, storeRefreshToken, removeRefreshTokens } from '@/services/refreshTokenService';
-import { AUTH_MESSAGES } from '@/constants/auth_message';
+import { AUTH_MESSAGES } from '@/constants/authMessage';
 import { generateAccessToken, generateRefreshToken } from '@/utils/generateToken';
 
 const REFRESH_SECRET = process.env.REFRESH_SECRET;

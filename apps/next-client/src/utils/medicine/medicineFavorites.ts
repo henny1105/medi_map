@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import Cookies from 'js-cookie';
 import { API_URLS } from '@/constants/urls';
 import { MedicineFavorite } from '@/types/medicine.types';

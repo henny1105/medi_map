@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { API_URLS } from '@/constants/urls';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import { ALERT_MESSAGES } from '@/constants/alertMessage';
 
 interface RecommendResponse {

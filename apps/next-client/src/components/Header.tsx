@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import { ROUTES, API_URLS } from '@/constants/urls';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import Image from 'next/image';
 
 export default function Header() {

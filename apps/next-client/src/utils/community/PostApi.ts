@@ -1,24 +1,16 @@
-import { axiosInstance } from '@/services/axiosInstance';
 import { API_URLS } from '@/constants/urls';
-import { ALERT_MESSAGES } from '@/constants/alertMessage';
 import { ERROR_MESSAGES } from '@/constants/errors';
 import { AxiosError } from 'axios';
+import { axiosInstance } from '@/services/common/axiosInstance';
+import { Post } from '@/types/post';
 
-interface FetchPostsParams {
-  page: number;
-  limit: number;
-  search: string;
-}
-
-export const fetchPosts = async ({ page, limit, search }: FetchPostsParams) => {
+export async function fetchPost(id: string): Promise<Post> {
   try {
-    const response = await axiosInstance.get(`${API_URLS.POSTS}`, {
-      params: { page, limit, search },
-    });
+    const response = await axiosInstance.get(`${API_URLS.POSTS}/${id}`);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      let errorMessage: string = ALERT_MESSAGES.ERROR.POST.FETCH_POSTS;
+      let errorMessage: string = ERROR_MESSAGES.CLIENT_ERROR;
 
       if (error.response?.status === 404) {
         errorMessage = ERROR_MESSAGES.POST_NOT_FOUND;
@@ -29,8 +21,8 @@ export const fetchPosts = async ({ page, limit, search }: FetchPostsParams) => {
       console.error(errorMessage);
       throw new Error(errorMessage);
     } else {
-      console.error('Failed to fetch posts:', error);
+      console.error('Failed to fetch post:', error);
       throw new Error(ERROR_MESSAGES.UNKNOWN_ERROR);
     }
   }
-};
+}

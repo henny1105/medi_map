@@ -3,8 +3,8 @@ import bcrypt from 'bcrypt';
 import axios from 'axios';
 import { User } from '@/models';
 import { authMiddleware } from '@/middleware/authMiddleware';
-import { MYPAGE_MESSAGES } from '@/constants/mypage_message';
-import { AUTH_MESSAGES } from '@/constants/auth_message';
+import { MYPAGE_MESSAGES } from '@/constants/mypageMessage';
+import { AUTH_MESSAGES } from '@/constants/authMessage';
 
 const router = express.Router();
 

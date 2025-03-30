@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import { API_URLS } from "@/constants/urls";
 import { MedicineResultDto } from "@/dto/MedicineResultDto";
 import { SEARCH_ERROR_MESSAGES } from '@/constants/searchErrors';

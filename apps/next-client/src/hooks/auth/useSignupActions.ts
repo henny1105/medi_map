@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { signup } from '@/services/signupService';
+import { signup } from '@/services/auth/signupService';
 import { ROUTES } from '@/constants/urls';
 import { ERROR_MESSAGES } from '@/constants/errors';
 import { toast } from 'react-toastify';

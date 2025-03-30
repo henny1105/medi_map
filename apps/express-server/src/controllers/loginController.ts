@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { findUserByEmail } from '@/services/authService';
 import { generateAccessToken, generateRefreshToken } from '@/utils/generateToken';
-import { AUTH_MESSAGES } from '@/constants/auth_message';
+import { AUTH_MESSAGES } from '@/constants/authMessage';
 import { storeRefreshToken, removeRefreshTokens } from '@/services/refreshTokenService';
 import { User, sequelize } from '@/models';
 

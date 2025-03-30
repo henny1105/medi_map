@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { loginWithCredentials, loginWithGoogle } from '@/services/loginService';
+import { loginWithCredentials, loginWithGoogle } from '@/services/auth/loginService';
 import { ERROR_MESSAGES } from '@/constants/errors';
 import { ROUTES } from '@/constants/urls';
 import { useSession } from 'next-auth/react';

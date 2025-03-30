@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { API_URLS } from '@/constants/urls';
 import { ALERT_MESSAGES } from '@/constants/alertMessage';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 
 interface CommentFormProps {
   urlPostId: string;

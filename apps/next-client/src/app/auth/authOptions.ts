@@ -2,11 +2,11 @@ import { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { JWT } from 'next-auth/jwt';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import { ERROR_MESSAGES } from '@/constants/errors';
 import { API_URLS } from '@/constants/urls';
 import { CredError } from '@/error/CredError';
-import { refreshAccessToken } from '@/utils/authUtils';
+import { refreshAccessToken } from '@/utils/auth/authUtils';
 
 const ACCESS_TOKEN_EXPIRES_IN = 60 * 60 * 1000;
 

@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import type Quill from 'quill'; 
 import Cookies from 'js-cookie';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import { API_URLS } from '@/constants/urls';
 import { useCreatePost } from '@/hooks/queries/useCreatePost';
 import 'react-quill/dist/quill.snow.css';

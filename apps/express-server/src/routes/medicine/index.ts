@@ -3,7 +3,7 @@ import { syncMedicines, syncApprovals, getJoinedMedicines, getAllMedicines } fro
 import { Medicine, MedicineDesc } from '@/models';
 import { sendResponse } from '@/utils/medicineUtils';
 import { buildWhereClause } from '@/utils/queryBuilder';
-import { SEARCH_MESSAGES } from '@/constants/search_messages';
+import { SEARCH_MESSAGES } from '@/constants/searchMessages';
 import { ValidationError, UnexpectedError, DatabaseError } from '@/error/CommonError';
 
 const router = express.Router();

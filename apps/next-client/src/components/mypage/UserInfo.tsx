@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSession , signOut } from 'next-auth/react';
 import { API_URLS } from '@/constants/urls';
-import { getAuthHeader } from '@/utils/authUtils';
-import { axiosInstance } from '@/services/axiosInstance';
+import { getAuthHeader } from '@/utils/auth/authUtils';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import { useRouter } from 'next/navigation';
-import { validateNickname, validatePasswordChange } from '@/utils/validation';
+import { validateNickname, validatePasswordChange } from '@/utils/auth/validation';
 import { ALERT_MESSAGES } from '@/constants/alertMessage';
 import Cookies from 'js-cookie';
 

@@ -1,8 +1,8 @@
-import { PharmacyDTO } from '@/dto/PharmacyDTO';
-import { getTodayOperatingHours, isPharmacyOpenNowToday } from '@/utils/pharmacyUtils';
+import { PharmacyDto } from '@/dto/PharmacyDto';
+import { getTodayOperatingHours, isPharmacyOpenNowToday } from '@/utils/pharmacy/pharmacyUtils';
 
 interface PharmacyTimeListProps {
-  pharmacy: PharmacyDTO;
+  pharmacy: PharmacyDto;
 }
 
 const PharmacyTimeList: React.FC<PharmacyTimeListProps> = ({ pharmacy }) => {

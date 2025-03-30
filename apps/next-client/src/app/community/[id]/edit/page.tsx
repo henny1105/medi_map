@@ -7,7 +7,7 @@ import { usePost } from '@/hooks/queries/usePostEdit';
 import '@/styles/pages/community/community.scss';
 import 'react-quill/dist/quill.snow.css';
 import type Quill from 'quill';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import { API_URLS } from '@/constants/urls';
 import Cookies from 'js-cookie';
 import { ALERT_MESSAGES } from '@/constants/alertMessage';

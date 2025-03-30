@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Pharmacy } from '@/models';
 import { PharmacyAPIItem } from '@/types/pharmacy.types';
-import { PharmacyItemDTO } from '@/dto/PharmacyItemDTO';
+import { PharmacyItemDto } from '@/dto/PharmacyItemDto';
 import { APIError, DataParsingError, DatabaseError, UpdateError } from '@/error/CommonError';
 import { ERROR_MESSAGES } from '@/constants/errors';
 
@@ -38,7 +38,7 @@ async function fetchPageData(pageNo: number): Promise<PharmacyAPIItem[]> {
       throw new DataParsingError(`${ERROR_MESSAGES.DATA_PARSING_ERROR}: Page: ${pageNo}`);
     }
 
-    return (data.response.body.items.item || []).map(PharmacyItemDTO.fromAPI);
+    return (data.response.body.items.item || []).map(PharmacyItemDto.fromAPI);
   } catch (error) {
     if (error instanceof DataParsingError) {
       throw error;

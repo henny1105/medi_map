@@ -1,4 +1,4 @@
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import { NoResultsError, ApiRequestError } from '@/error/SearchError';
 import { MedicineResultDto } from '@/dto/MedicineResultDto';
 import { API_URLS } from '@/constants/urls';

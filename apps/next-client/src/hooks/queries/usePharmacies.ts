@@ -1,14 +1,14 @@
 import axios from 'axios';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import { useQuery } from '@tanstack/react-query';
-import { PharmacyDTO } from '@/dto/PharmacyDTO';
+import { PharmacyDto } from '@/dto/PharmacyDto';
 import { API_URLS } from '@/constants/urls';
 import { ERROR_MESSAGES } from '@/constants/errors';
 
 // 위치 기반으로 주변 약국 정보를 가져오는 함수
-const fetchPharmacies = async (lat: number, lng: number): Promise<PharmacyDTO[]> => {
+const fetchPharmacies = async (lat: number, lng: number): Promise<PharmacyDto[]> => {
   try {
-    const { data } = await axiosInstance.get<PharmacyDTO[]>(API_URLS.PHARMACY, {
+    const { data } = await axiosInstance.get<PharmacyDto[]>(API_URLS.PHARMACY, {
       params: { lat, lng },
       timeout: 5000,
     });

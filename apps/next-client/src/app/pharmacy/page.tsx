@@ -2,11 +2,11 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import '@/styles/pages/pharmacy/pharmacy.scss';
-import useGeoLocation from '@/hooks/useGeoLocation';
+import useGeoLocation from '@/hooks/pharmacy/useGeoLocation';
 import PharmacyTimeList from '@/components/pharmacy/PharmacyTimeList';
 import KakaoMap from '@/components/pharmacy/KakaoMap';
 import PharmacyDetails from '@/components/pharmacy/PharmacyDetails';
-import { PharmacyDTO } from '@/dto/PharmacyDTO';
+import { PharmacyDto } from '@/dto/PharmacyDto';
 import { usePharmacies } from '@/hooks/queries/usePharmacies';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 
@@ -20,7 +20,7 @@ export default function PharmacyPage() {
     }
   }, [initialLocation]);
 
-  const [selectedPharmacy, setSelectedPharmacy] = useState<PharmacyDTO | null>(null);
+  const [selectedPharmacy, setSelectedPharmacy] = useState<PharmacyDto | null>(null);
 
   const { 
     data: pharmacies = [], 
@@ -28,7 +28,7 @@ export default function PharmacyPage() {
     isLoading,
   } = usePharmacies(searchLocation?.lat, searchLocation?.lng);
 
-  const handlePharmacyClick = useCallback((pharmacy: PharmacyDTO) => {
+  const handlePharmacyClick = useCallback((pharmacy: PharmacyDto) => {
     setSelectedPharmacy(pharmacy);
   }, []);
 

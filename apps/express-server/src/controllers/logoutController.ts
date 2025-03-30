@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { removeRefreshTokens } from '@/services/refreshTokenService';
 import { User } from '@/models';
-import { AUTH_MESSAGES } from '@/constants/auth_message';
+import { AUTH_MESSAGES } from '@/constants/authMessage';
 
 export const logout = async (req: Request, res: Response): Promise<Response> => {
   const { userId, googleId } = req.body;

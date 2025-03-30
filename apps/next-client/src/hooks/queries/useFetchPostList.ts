@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { fetchPosts } from '@/utils/PostListApi';
+import { fetchPosts } from '@/utils/community/PostListApi';
 
 export function useFetchPosts(page: number, search: string) {
   return useSuspenseQuery({
