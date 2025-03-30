@@ -1,12 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@/styles/common/common.scss';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/auth/authOptions';
 import Header from '@/components/Header';
 import SessionWrapper from '@/components/SessionWrapper';
 import ContentWrapper from '@/components/ContentWrapper';
 import { ReactNode } from 'react';
-import SessionCookieSetter from '@/components/SessionCookieSetter';
 import Script from 'next/script';
 import Providers from '@/app/provider';
 
@@ -35,10 +36,17 @@ export default async function Layout({ children }: LayoutProps) {
             <Header />
             <ContentWrapper>
               {children}
-              <SessionCookieSetter />
             </ContentWrapper>
           </SessionWrapper>
         </Providers>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+        />
       </body>
     </html>
   );
