@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { PharmacyDTO } from '@/dto/PharmacyDTO';
-import { loadKakaoMapScript } from '@/utils/kakaoMapLoader';
-import { initializeMap, addMarkers } from '@/utils/mapUtils';
-import { applyFilter, FilterType } from '@/utils/mapFilterUtils';
+import { PharmacyDto } from '@/dto/PharmacyDto';
+import { loadKakaoMapScript } from '@/utils/pharmacy/kakaoMapLoader';
+import { initializeMap, addMarkers } from '@/utils/pharmacy/mapUtils';
+import { applyFilter, FilterType } from '@/utils/pharmacy/mapFilterUtils';
 import { ERROR_MESSAGES } from '@/constants/errors';
 
 interface KakaoMapProps {
-  pharmacies: PharmacyDTO[];
+  pharmacies: PharmacyDto[];
   location: { lat: number; lng: number } | null;
   onSearch: (lat: number, lng: number) => void;  // 검색을 요청할 콜백
-  onPharmacyClick: (pharmacy: PharmacyDTO) => void;
+  onPharmacyClick: (pharmacy: PharmacyDto) => void;
 }
 
 const KakaoMap: React.FC<KakaoMapProps> = ({
@@ -40,7 +40,7 @@ const KakaoMap: React.FC<KakaoMapProps> = ({
 
   // 약국 마커 갱신
   const updateMarkers = useCallback(
-    (pharmacies: PharmacyDTO[]) => {
+    (pharmacies: PharmacyDto[]) => {
       if (Array.isArray(markersRef.current)) {
         markersRef.current.forEach((marker) => marker.setMap(null));
       }

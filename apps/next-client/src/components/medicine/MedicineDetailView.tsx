@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useMedicineDetails } from '@/hooks/useMedicineDetails';
+import { useMedicineDetails } from '@/hooks/medicine/useMedicineDetails';
 import '@/styles/pages/search/search.scss';
 import MedicineInfo from '@/components/medicineDetail/MedicineInfo';
 import { ScrollToTopButton } from '@/components/common/ScrollToTopButton';

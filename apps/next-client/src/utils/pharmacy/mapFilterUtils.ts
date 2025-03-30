@@ -1,4 +1,4 @@
-import { PharmacyDTO } from '@/dto/PharmacyDTO';
+import { PharmacyDto } from '@/dto/PharmacyDto';
 
 export type FilterType = 'ALL' | 'OPEN_NOW' | 'NIGHT_PHARMACY';
 
@@ -10,7 +10,7 @@ export const getCurrentTime = (): number => {
 };
 
 // 현재 시간 기준으로 약국이 영업 중인지 확인
-export const isPharmacyOpenNow = (pharmacy: PharmacyDTO, currentTime: number): boolean => {
+export const isPharmacyOpenNow = (pharmacy: PharmacyDto, currentTime: number): boolean => {
   const openTime = parseInt(pharmacy.dutyTime1s || '0000', 10);
   const closeTime = parseInt(pharmacy.dutyTime1c || '2400', 10);
 
@@ -25,7 +25,7 @@ export const isPharmacyOpenNow = (pharmacy: PharmacyDTO, currentTime: number): b
 };
 
 // 약국이 심야 시간대에 영업하는지 확인
-export const isNightPharmacy = (pharmacy: PharmacyDTO): boolean => {
+export const isNightPharmacy = (pharmacy: PharmacyDto): boolean => {
   const openTime = pharmacy.dutyTime1s;
   const closeTime = pharmacy.dutyTime1c;
 
@@ -39,7 +39,7 @@ export const isNightPharmacy = (pharmacy: PharmacyDTO): boolean => {
 };
 
 // 약국 목록 필터링
-export const applyFilter = (pharmacies: PharmacyDTO[], filter: FilterType): PharmacyDTO[] => {
+export const applyFilter = (pharmacies: PharmacyDto[], filter: FilterType): PharmacyDto[] => {
   const currentTime = getCurrentTime();
 
   switch (filter) {

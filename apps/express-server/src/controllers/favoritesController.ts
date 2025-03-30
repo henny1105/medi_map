@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { Favorite } from '@/models';
 import { AuthenticatedRequest } from '@/middleware/authMiddleware';
 import { ERROR_MESSAGES } from '@/constants/errors';
-import { FAVORITE_MESSAGES } from '@/constants/favorites_message';
+import { FAVORITE_MESSAGES } from '@/constants/favoritesMessage';
 
 // 즐겨찾기 추가
 export const addFavorite = async (req: AuthenticatedRequest, res: Response): Promise<Response> => {

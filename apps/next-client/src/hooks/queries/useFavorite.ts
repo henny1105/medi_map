@@ -1,9 +1,9 @@
 import { useMutation, useSuspenseQuery, useQueryClient, useQuery } from '@tanstack/react-query';
-import { addFavoriteApi, checkFavoriteApi } from '@/utils/medicineFavorites';
+import { addFavoriteApi, checkFavoriteApi } from '@/utils/medicine/medicineFavorites';
 import { FAVORITE_MESSAGES } from '@/constants/errors';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import { API_URLS } from '@/constants/urls';
-import { getAuthHeader } from '@/utils/authUtils';
+import { getAuthHeader } from '@/utils/auth/authUtils';
 import { MedicineFavorite } from '@/types/medicine.types';
 
 // 즐겨찾기 상태 확인

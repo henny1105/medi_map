@@ -1,6 +1,6 @@
 import { Sequelize, WhereOptions, Op } from 'sequelize';
 import { QueryParams } from '@/types/medicine.types';
-import { SEARCH_MESSAGES } from '@/constants/search_messages';
+import { SEARCH_MESSAGES } from '@/constants/searchMessages';
 
 export function buildWhereClause(query: QueryParams): WhereOptions {
   const whereClause: WhereOptions = {};

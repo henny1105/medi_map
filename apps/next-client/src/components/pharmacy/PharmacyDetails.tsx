@@ -1,9 +1,9 @@
-import { PharmacyDTO } from '@/dto/PharmacyDTO';
-import { getTodayOperatingHours, getWeeklyOperatingHours, isPharmacyOpenNowToday } from '@/utils/pharmacyUtils';
+import { PharmacyDto } from '@/dto/PharmacyDto';
+import { getTodayOperatingHours, getWeeklyOperatingHours, isPharmacyOpenNowToday } from '@/utils/pharmacy/pharmacyUtils';
 import Image from 'next/image';
 
 interface PharmacyDetailsProps {
-  pharmacy: PharmacyDTO;
+  pharmacy: PharmacyDto;
   onClose: () => void;
 }
 

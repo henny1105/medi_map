@@ -3,20 +3,27 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import '@/styles/pages/auth/signup.scss';
-import { useSignupForm } from '@/hooks/useSignupForm';
-import { useSignupActions } from '@/hooks/useSignupActions';
+import { toast } from 'react-toastify';
+import { useSignupForm } from '@/hooks/auth/useSignupForm';
+import { useSignupActions } from '@/hooks/auth/useSignupActions';
+import { validateSignup } from '@/utils/auth/validation';
 
 export default function SignupPage() {
-  const { username, setUsername, email, setEmail, password, setPassword, error, setError } = useSignupForm();
+  const { username, setUsername, email, setEmail, password, setPassword, error } = useSignupForm();
   const { handleSignup } = useSignupActions({
     username,
     email,
-    password,
-    setError,
+    password
   });
   const [isSigningUp, setIsSigningUp] = useState(false);
 
   const onSignupClick = async () => {
+    const error = validateSignup(username, email, password);
+    if (error) {
+      toast.error(error);
+      return;
+    }
+  
     setIsSigningUp(true);
     await handleSignup();
     setIsSigningUp(false);

@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { createUser, findUserByEmail } from '@/services/authService';
 import { generateAccessToken, generateRefreshToken } from '@/utils/generateToken';
-import { AUTH_MESSAGES } from '@/constants/auth_message';
-import { storeRefreshToken } from '@/services/refreshTokenService';
+import { AUTH_MESSAGES } from '@/constants/authMessage';
+import { storeRefreshToken, removeRefreshTokens } from '@/services/refreshTokenService';
+import { User, sequelize } from '@/models';
 
 // 유효성 검사 함수
 const validateSignupInput = (username: string, email: string, password: string): string | null => {
@@ -51,7 +52,10 @@ export const signup = async (req: Request, res: Response): Promise<Response> => 
     const { refreshToken, refreshExpiresAt } = generateRefreshToken(newUser.id, newUser.email);
 
     // 리프레시 토큰 저장
-    await storeRefreshToken(newUser.id, refreshToken, refreshExpiresAt);
+    await sequelize.transaction(async t => {
+      await removeRefreshTokens(newUser.id, t);
+      await storeRefreshToken(newUser.id, refreshToken, refreshExpiresAt, t);
+    });
 
     return res.status(201).json({ token: accessToken, refreshToken, user: newUser });
   } catch (error) {

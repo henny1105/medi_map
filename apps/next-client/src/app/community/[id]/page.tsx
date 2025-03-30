@@ -1,5 +1,5 @@
 import '@/styles/pages/community/community.scss';
-import { fetchPost } from '@/utils/PostApi';
+import { fetchPost } from '@/utils/community/PostApi';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import PostDetailClient from '@/components/community/PostDetailClient';
 

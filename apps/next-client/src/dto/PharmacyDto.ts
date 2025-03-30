@@ -1,4 +1,4 @@
-export interface PharmacyDTO {
+export interface PharmacyDto {
   dutyName: string;       // 약국 이름
   dutyAddr: string;       // 약국 주소
   dutyTel1: string;       // 약국 전화번호

@@ -1,7 +1,7 @@
 import React from 'react';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { fetchMedicineDetails } from '@/utils/medicineApi';
-import { checkFavoriteApi } from '@/utils/medicineFavorites';
+import { fetchMedicineDetails } from '@/utils/medicine/medicineApi';
+import { checkFavoriteApi } from '@/utils/medicine/medicineFavorites';
 import MedicineDetailClient from '@/components/medicineDetail/MedicineDetailClient';
 
 async function getMedicineDetails(medicineId: string) {

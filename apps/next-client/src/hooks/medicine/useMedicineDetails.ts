@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { fetchMedicineDetails } from '@/utils/medicineApi';
+import { fetchMedicineDetails } from '@/utils/medicine/medicineApi';
 import { MedicineResultDto } from '@/dto/MedicineResultDto';
 import { SEARCH_ERROR_MESSAGES } from '@/constants/searchErrors';
 

@@ -1,4 +1,4 @@
-import { PharmacyDTO } from '@/dto/PharmacyDTO';
+import { PharmacyDto } from '@/dto/PharmacyDto';
 import { ERROR_MESSAGES } from '@/constants/errors';
 
 // 지도 초기화 함수
@@ -31,8 +31,8 @@ let currentOpenInfoWindow: kakao.maps.InfoWindow | null = null;
 
 export const addMarkers = (
   map: kakao.maps.Map,
-  pharmacies: PharmacyDTO[],
-  onPharmacyClick: (pharmacy: PharmacyDTO) => void
+  pharmacies: PharmacyDto[],
+  onPharmacyClick: (pharmacy: PharmacyDto) => void
 ): kakao.maps.Marker[] => {
   const markers: kakao.maps.Marker[] = [];
 

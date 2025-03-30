@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
-import { setSessionCookies } from '@/utils/sessionCookies';
+import { setSessionCookies } from '@/utils/auth/sessionCookies';
 
 const SessionCookieSetter = () => {
   const { data: session, status } = useSession();

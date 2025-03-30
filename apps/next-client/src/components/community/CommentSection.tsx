@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { API_URLS } from '@/constants/urls';
 import { ALERT_MESSAGES } from '@/constants/alertMessage';
-import { axiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/services/common/axiosInstance';
 import CommentList from '@/components/community/CommentList';
 import CommentForm from '@/components/community/CommentForm';
 
