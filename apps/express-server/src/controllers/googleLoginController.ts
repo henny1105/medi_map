@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
-import { User } from '@/models';
+import { User, sequelize } from '@/models';
 import { generateAccessToken, generateRefreshToken } from '@/utils/generateToken';
+import { storeRefreshToken, removeRefreshTokens } from '@/services/refreshTokenService';
 
-export const googleLogin = async (req: Request, res: Response) => {
+// Google 소셜 로그인 처리
+export const googleLogin = async (req: Request, res: Response): Promise<Response> => {
   const { googleId, email, username } = req.body;
 
   if (!googleId || !email) {
@@ -11,8 +13,10 @@ export const googleLogin = async (req: Request, res: Response) => {
   }
 
   try {
+    // 기존 Google 계정 확인
     let user = await User.findOne({ where: { googleId } });
 
+    // 최초 로그인 시 유저 생성
     if (!user) {
       user = await User.create({
         googleId,
@@ -23,8 +27,15 @@ export const googleLogin = async (req: Request, res: Response) => {
       });
     }
 
+    // 토큰 생성
     const accessToken = generateAccessToken(user.id, user.email);
     const { refreshToken, refreshExpiresAt } = generateRefreshToken(user.id, user.email);
+
+    // 기존 refreshToken 삭제 -> 새로 저장
+    await sequelize.transaction(async t => {
+      await removeRefreshTokens(user.id, t);
+      await storeRefreshToken(user.id, refreshToken, refreshExpiresAt, t);
+    });
 
     return res.status(200).json({
       user: {
