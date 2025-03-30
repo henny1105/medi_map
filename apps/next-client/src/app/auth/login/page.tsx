@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import '@/styles/pages/auth/login.scss';
-import { validateLogin } from '@/utils/validation';
+import { validateLogin } from '@/utils/auth/validation';
 
 export default function LoginPage() {
   const { email, setEmail, password, setPassword, error} = useLoginForm();

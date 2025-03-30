@@ -8,6 +8,7 @@ import Header from '@/components/Header';
 import SessionWrapper from '@/components/SessionWrapper';
 import ContentWrapper from '@/components/ContentWrapper';
 import { ReactNode } from 'react';
+import SessionCookieSetter from '@/components/SessionCookieSetter';
 import Script from 'next/script';
 import Providers from '@/app/provider';
 
@@ -36,6 +37,7 @@ export default async function Layout({ children }: LayoutProps) {
             <Header />
             <ContentWrapper>
               {children}
+              <SessionCookieSetter />
             </ContentWrapper>
           </SessionWrapper>
         </Providers>

@@ -6,7 +6,7 @@ import '@/styles/pages/auth/signup.scss';
 import { toast } from 'react-toastify';
 import { useSignupForm } from '@/hooks/auth/useSignupForm';
 import { useSignupActions } from '@/hooks/auth/useSignupActions';
-import { validateSignup } from '@/utils/validation';
+import { validateSignup } from '@/utils/auth/validation';
 
 export default function SignupPage() {
   const { username, setUsername, email, setEmail, password, setPassword, error } = useSignupForm();
